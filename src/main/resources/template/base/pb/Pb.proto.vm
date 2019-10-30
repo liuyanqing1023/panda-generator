@@ -1,0 +1,56 @@
+syntax = "proto3";
+//option optimize_for = LITE_RUNTIME;
+
+package io.sr.api.model;
+option csharp_namespace = "Io.SR.Api.Model";
+
+option java_package = "io.sr.api.model";
+option java_outer_classname  = "${className}PB";
+option java_multiple_files = false;
+
+option objc_class_prefix = "SRPB";
+
+import "common.proto";
+
+
+ // ${comments}
+message ${className}{
+#foreach ($column in $columns)
+	// $column.comments	 
+#if( $column.attrType == "String")
+	string $column.columnName = $velocityCount;
+#elseif( $column.attrType == "Integer" || $column.attrType == "int")
+	int32 $column.columnName = $velocityCount;
+#elseif( $column.attrType == "Long" || $column.attrType == "long")
+	int64 $column.columnName = $velocityCount;	
+#elseif( $column.attrType == "Date")
+	int64 $column.columnName = $velocityCount;
+#elseif( $column.attrType == "double" ||  $column.attrType == "Double" ||  $column.attrType == "float" ||  $column.attrType == "Float" ||  $column.attrType == "BigDecimal")
+	double $column.columnName = $velocityCount;	
+#else
+	参数类型   $column.columnName = $velocityCount;					
+#end
+#end
+}
+//${comments}信息查询请求
+message ${className}Request{
+	repeated ApiOption options = 1;
+}
+// ${comments}信息查询应答
+message ${className}Response{
+	ApiResult status = 1;
+	${className} data = 2;
+}
+
+// 请求${comments}列表
+message ${className}ListRequest{
+	repeated ApiOption options = 1;
+}
+
+
+// ${comments}查询列表
+message ${className}ListResponse{
+	ApiResult status = 1;
+	repeated ${className} data = 2;
+    ApiPager page =3;
+}

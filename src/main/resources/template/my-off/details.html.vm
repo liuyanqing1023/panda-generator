@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>${comments}</title>
+#set($header='<#include "/header.html">')
+#set($save='<#if shiro.hasPermission("'+${pathName}+':save")>')
+#set($update='<#if shiro.hasPermission("'+${pathName}+':update")>')
+#set($delete='<#if shiro.hasPermission("'+${pathName}+':delete")>')
+#set($end='</#if>')
+$header
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width:100%">
+			#foreach($column in $columns)
+			#if($column.columnName != $pk.columnName)
+				<div class="form-group col-md-5">
+				   	<div class="col-sm-2 control-label" style="color:#9ea7b4">${column.comments} : </div>
+				   	<div class="col-sm-3 control-label" style="text-align:left;"> {{${classname}.${column.attrname}}} </div>
+				</div>
+			#end
+			#end
+			<div class="form-group ">
+				<div class="col-md-12">
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="window.location.href='/silk-road/modules/generator/${pathName}.html'" value="返回"/>
+				</div> 
+			</div>
+		</from>
+	</div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/generator/${pathName}_details.js?_${.now?long}"></script>
+</body>
+</html>

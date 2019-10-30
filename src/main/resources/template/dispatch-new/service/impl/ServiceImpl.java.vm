@@ -1,0 +1,90 @@
+package ${package}.${moduleName}.service.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
+import ${package}.${moduleName}.dao.${className}Mapper;
+import ${package}.${moduleName}.entity.${className};
+import ${package}.${moduleName}.service.${className}Service;
+
+/**
+ * <p>
+ * ${comments}服务
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@Service
+public class ${className}ServiceImpl implements ${className}Service {
+
+	@Autowired
+	private ${className}Mapper ${classname}Mapper;
+
+    @Override
+	public boolean save${className}(${className} param) throws Exception {
+		param.setCreateTime(new Date());
+		return (${classname}Mapper.insert(param) == 1);
+	}
+
+	
+	@Override
+	public ${className} get${className}(${className} param) throws Exception {
+		QueryWrapper<${className}> wrapper = new QueryWrapper(param);
+        return  ${classname}Mapper.selectOne(wrapper);
+		
+	}
+
+	@Override
+	public int update${className}(${className} entity, ${className} param) throws Exception {
+		entity.setUpdateTime(new Date());
+        QueryWrapper<${className}> wrapper = new QueryWrapper(param);
+
+        return ${classname}Mapper.update(entity, wrapper);
+	}
+
+	
+	@Override
+	public int remove${className}(${className} param) throws Exception {
+		return ${classname}Mapper.delete(new QueryWrapper(param));
+	}
+
+
+	@Override
+	public int remove${className}Sham(${className} param) throws Exception {
+		${className} ${classname} = new ${className}();
+        ${classname}.setDeleteFlag(0);
+        return ${classname}Mapper.update(${classname}, new QueryWrapper(param));
+	}
+	
+	
+	@Override   
+	public PageInfo<${className}> list${className}Page(Integer pageNo,Integer pageSize,${className} param) throws Exception {
+			
+        PageHelper.startPage(pageNo, pageSize);
+        List<${className}> list = baseMapper.selectList(new QueryWrapper(param));
+        PageInfo<${className}> pageInfo = new PageInfo<>(list);
+
+        return pageInfo;
+	}
+
+	@Override
+	public List<${className}> list${className}(${className} param) throws Exception {
+		QueryWrapper<${className}> wrapper = new QueryWrapper(param);
+		return ${classname}Mapper.selectList(wrapper);
+	}
+
+	@Override
+	public int count${className}(${className} param) throws Exception {
+		return 0;
+	}
+
+}

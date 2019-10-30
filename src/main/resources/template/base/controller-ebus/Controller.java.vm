@@ -1,0 +1,108 @@
+package ${package}.controller;
+
+import ${package}.common.model.request.ParamBean;
+import ${package}.common.model.response.PageBean;
+import ${package}.common.model.response.ResponseResult;
+import ${package}.common.model.response.ResultBean;
+import ${package}.entity.${className};
+import ${package}.service.${className}Service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.*;
+import lombok.extern.slf4j.Slf4j;
+
+
+/**
+ * <p>
+ * ${comments}服务接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@RestController
+@RequestMapping("/${pathName}")
+@Slf4j
+public class ${className}Controller {
+    @Autowired
+    @Qualifier("${classname}ServiceImpl")
+    private ${className}Service ${classname}Service;
+
+     /**
+     * 保存${className}
+     * @param param
+     * @return Boolean
+     */
+    @PostMapping(value="/save")
+    public ResponseResult save(@RequestBody ${className} param) throws Exception {
+        log.info("request param:{}",param.toString());
+        if (${classname}Service.saveOrUpdate(param)){
+            return  new ResponseResult(CommonCode.SUCCESS);
+        }
+        return  new ResponseResult(CommonCode.FAIL);
+    }
+
+	 /**
+     * 通过主键获取${className}详细信息
+     * @param key
+     * @return ${className}
+     */
+    @GetMapping(value="/info/{key}")
+    public ResultBean<${className}> info(@PathVariable("key") ${pk.attrType} key) throws Exception {
+        log.info("request key:{}",key);
+        ${className} ${classname} = ${classname}Service.getByKey(key);
+        if (${classname} == null){
+            return new ResultBean<>(CommonCode.RESOURCES_DONOT);
+        }
+        return new ResultBean<>(${classname});
+    }
+
+     /**
+     * 分页条件查询${className}
+     * @param params
+     * @return PageBean<${className}>
+     */
+    @PostMapping(value="/list" )
+    public ResultBean<PageBean<${className}>> list(@RequestBody ParamBean<${className}> params) throws Exception {
+        log.info("request params:{}",params.toString());
+        PageBean<${className}> pageBean = new PageBean<>();
+        pageBean.setPageSize(params.getPageSize());
+        pageBean.setCurrPage(params.getCurrPage());
+        //查询总条数
+        long total = ${classname}Service.total(params.getData());
+        pageBean.setTotalCount(total);
+        if (total>0 ){
+            List<${className}> list = ${classname}Service.list(params.getCurrPage(), params.getPageSize(), params.getData());
+            pageBean.setList(list);
+        }
+        return new ResultBean<>(pageBean);
+    }
+
+
+  /**
+   * 根据主键修改${className}
+   * @param param
+   * @return Boolean
+   */
+    @PostMapping(value="/update")
+    public ResponseResult update(@RequestBody ${className} param) throws Exception {
+        log.info("request param:{}",param.toString());
+        if (${classname}Service.saveOrUpdate(param)){
+            return  new ResponseResult(CommonCode.SUCCESS);
+        }
+        return  new ResponseResult(CommonCode.FAIL);
+    }
+
+	/**
+     * 删除${className}
+     * @param param
+     * @return
+     */
+    @PostMapping(value="/delete")
+    public ResultBean<Integer>  delete(@RequestBody List<${pk.attrType}> param) throws Exception {
+        log.info("request param:{}",param.toString());
+        return new ResultBean<>(${classname}Service.removeByKeys(param));
+    }
+
+}

@@ -1,0 +1,21 @@
+$(function () {
+	var id = T.p('id');
+	vm.get${classname}(id);
+});
+
+var vm = new Vue({
+	el:'#rrapp',
+	data:{
+		title: null,
+		${classname}: {}
+	},
+	methods: {
+		
+		get${classname}: function (id) {
+			$.get(baseURL + "${pathName}/info/"+id, function(r){
+                vm.${classname} = r.${classname};
+                vm.title = r.${classname}.id + "-- 详情:"
+            });
+		}
+	}
+});

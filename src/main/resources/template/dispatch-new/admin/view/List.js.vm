@@ -1,0 +1,20 @@
+
+     		详情部分
+            #foreach ($column in $columns)
+             <el-form-item label="$column.comments">
+                <span>{{ scope.row.$column.attrname }}</span>
+             </el-form-item>
+			#end
+    
+                              列表部分
+          #foreach ($column in $columns)
+            <el-table-column label="$column.comments" prop="$column.attrname"></el-table-column>
+		  #end
+
+		     表单部分
+		  #foreach ($column in $columns)
+             <el-form-item label="$column.comments">
+                 <el-input v-model="form.param.$column.attrname"/>
+             </el-form-item>
+		  #end
+     

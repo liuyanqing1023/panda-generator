@@ -1,0 +1,82 @@
+package ${package}.${moduleName}.service.impl;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import io.sr.common.utils.UtilFuns;
+import ${package}.${moduleName}.dao.${className}Dao;
+import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.service.${className}Service;
+
+
+@Service("${classname}Service")
+public class ${className}ServiceImpl implements ${className}Service {
+
+	@Autowired
+	private ${className}Dao ${classname}Dao;
+
+    @Override
+	public boolean save(${className} param) throws Exception {
+		param.setCreateTime(new Date());
+		return (${classname}Dao.insertSelective(param) == 1);
+	}
+
+	@Override
+	public boolean update(${className} param) throws Exception {
+		param.setUpdateTime(new Date());
+		return (${classname}Dao.updateByPrimaryKeySelective(param) == 1);
+	}
+
+
+	/**
+	 * 伪删除
+	 */
+	@Override
+	public int deleteFake(List<Long> ids) throws Exception {
+		${className} bean = new ${className}();
+		bean.setState(false);
+		int i = 0;
+		for (Long id : ids) {
+			bean.setId(id);
+			i += ${classname}Dao.updateByPrimaryKeySelective(bean);
+		}
+		
+		return i;
+	}
+
+	@Override
+	public ${className} selectByKey(Long id) throws Exception {
+		
+		return ${classname}Dao.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public List<${className}> selectByPage(${className} param, int pageSize, int currPage) throws Exception {
+		${className}Example example = this.getExample(param);
+		example.setOrderByClause("create_time DESC");
+		example.setPageSize(pageSize);
+		example.setPageNo(currPage);
+			
+		return ${classname}Dao.selectByExample(example);
+	}
+
+	@Override
+	public int queryTotal(${className} param) throws Exception {
+		${className}Example example = this.getExample(param);
+		return ${classname}Dao.countByExample(example);
+	}
+
+	private ${className}Example getExample(${className} param) {
+		${className}Example example = new ${className}Example();
+		Criteria criteria = example.createCriteria();
+		if (param!=null ) {
+		}
+		return example;
+	}
+
+}

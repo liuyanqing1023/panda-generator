@@ -1,0 +1,32 @@
+syntax = "proto3";
+//option optimize_for = LITE_RUNTIME;
+
+package io.sr.api.model;
+
+option csharp_namespace = "Io.SR.Api.Model";
+
+option java_package = "io.sr.api.model";
+option java_outer_classname  = "DriversPB";
+option java_multiple_files = false;
+
+option objc_class_prefix = "SRPB";
+
+ // ${comments}
+message ${className}{
+
+#foreach ($column in $columns)
+	
+	// $column.comments	 
+	#if( $column.attrType == String)
+		 string $column.attrname = $velocityCount;
+	#else
+		 类型   $column.attrname = $velocityCount;
+	#end
+	
+   
+#end
+
+};
+message ${className}List {
+    repeated ${className} ${classname} = 1;
+}

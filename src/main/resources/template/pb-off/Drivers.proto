@@ -1,0 +1,74 @@
+syntax = "proto3";
+//option optimize_for = LITE_RUNTIME;
+
+package io.sr.api.model;
+
+option csharp_namespace = "Io.SR.Api.Model";
+
+option java_package = "io.sr.api.model";
+option java_outer_classname  = "DriversPB";
+option java_multiple_files = false;
+
+option objc_class_prefix = "SRPB";
+
+// 司机信息
+message Drivers {
+    //租户ID
+    int32 tenant_id  = 1;
+
+    //公司ID
+    int32 company_id = 2;
+
+    //司机ID
+    int32 driver_id = 3;
+
+    //司机类型 0=聘用 1=挂靠 2=借调
+    int32 driver_type = 4;
+
+    //司机姓名
+    string name = 5;
+
+    //司机手机
+    string mobile = 6;
+
+    //证件类型
+    int32 identity_type = 7;
+
+    //证件号
+    string identity_card = 8;
+
+    //性别
+    int32 sex = 9;
+
+    //住址
+    string address = 10;
+
+    //准驾类型
+    string approved_driving_model = 11;
+
+    //初次领证日期 UnixTime 秒 （UTC)
+    int64 driving_license_date = 12;
+
+    //驾驶证到期时间 UnixTime 秒 （UTC)
+    int64 driving_license_expiry_time = 13;
+
+    //状态  0=禁用  1=正常
+    int32 status = 14;
+
+    //员工ID
+    int32 employee_id = 15;
+
+    //统一中心用户Id
+    int32 user_id = 16;
+
+    //电子邮箱
+    string email = 17;
+
+    //密码
+    string password = 18;
+};
+
+
+message DriversList {
+    repeated Drivers drivers = 1;
+}

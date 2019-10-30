@@ -1,0 +1,68 @@
+package ${package}.${moduleName}.entity.${className};
+
+import cn.silucaihong.common.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+import java.io.Serializable;
+import java.util.Date;
+
+## 定义变量
+#set($a=".trim()")
+/**
+ * <p>
+ * ${comments}
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@TableName("${tableName}")
+public class ${className} implements Serializable{
+	private static final long serialVersionUID = -1583175104598516898L;
+#foreach ($column in $columns)
+		/**
+		 * $column.comments 
+		 */
+ 	#if($column.columnName == $pk.columnName)
+	@TableId
+	#end
+	private $column.attrType $column.attrname;
+#end
+
+#foreach ($column in $columns)
+	/**
+	 * 设置：${column.comments}
+	 */
+	public void set${column.attrName}($column.attrType $column.attrname) {
+		#if($column.attrType == "String")
+		this.$column.attrname = $column.attrname == null ? null : $column.attrname$a;
+		#else	
+		this.$column.attrname = $column.attrname;
+		#end
+    }
+	/**
+	 * 获取：${column.comments}
+	 */
+	public $column.attrType get${column.attrName}() {
+		return $column.attrname;
+	}
+#end
+	
+	
+	@Override
+    public String toString() {
+        return "${className}{" +
+    #foreach ($column in $columns)
+        #if($foreach.count==1)
+        "$column.attrname=" + $column.attrname + 
+        #else 
+        ", $column.attrname=" + $column.attrname + 
+        #end
+    #end
+    	"}";
+    }
+}

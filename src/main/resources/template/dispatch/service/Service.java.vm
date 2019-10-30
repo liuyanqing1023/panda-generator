@@ -1,0 +1,50 @@
+package ${package}.${moduleName}.service;
+
+import java.util.List;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface ${className}Service {
+
+    /**
+	 * 新增数据
+	 * @param t
+	 * @throws Exception
+	 */
+	boolean save(${className} param) throws Exception;
+	
+	/**
+	 * 修改数据 
+	 * @param t
+	 * @throws Exception
+	 */
+	boolean update(${className} param) throws Exception;
+	
+	/**
+	 * 伪删除
+	 * @param ids
+	 * @throws Exception
+	 */
+	int deleteFake(List<Long> ids) throws Exception;
+	
+	/**
+	 * 通过主键查询
+	 * @param id
+	 * @throws Exception
+	 */
+	${className} selectByKey(Long id) throws Exception;
+	
+	/**
+	 * 分页查询
+	 * @param param 查询条件
+	 * @param pageSize 每页显示条数
+	 * @param currPage 当前页
+	 * @return SrOrderRecords
+	 */
+	List<${className}> selectByPage(${className} param , int pageSize ,int currPage) throws Exception;
+}
+

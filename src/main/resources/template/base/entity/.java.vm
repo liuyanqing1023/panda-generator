@@ -1,0 +1,30 @@
+package ${package}.${moduleName}.entity.${className};
+
+
+	#if(${hasBigDecimal})
+	import java.math.BigDecimal;
+	#end
+import java.io.Serializable;
+import java.util.Date;
+import lombok.Data;
+
+/**
+ * <p>
+ * ${comments}
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+
+@Data
+public class ${className} implements Serializable{
+private static final long serialVersionUID = -1583175104598516898L;
+#foreach ($column in $columns)
+/**
+ * $column.comments
+ */
+private $column.attrType $column.attrname;
+#end
+
+}

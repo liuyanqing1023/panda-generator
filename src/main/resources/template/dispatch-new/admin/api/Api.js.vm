@@ -1,0 +1,47 @@
+import request from '@/utils/request'
+
+export function list(data) {
+  return request({
+    url: '/api/admin/${pathName}/v1/list',
+    method: 'post',
+    contentType: 'application/json',
+    data,
+    baseURL: ''
+  })
+}
+export function info(data) {
+  return request({
+    url: '/api/admin/${pathName}/v1/info',
+    method: 'post',
+    contentType: 'application/json',
+    data,
+    baseURL: ''
+  })
+}
+export function save(data) {
+  return request({
+    url: '/api/admin/${pathName}/v1/save',
+    method: 'post',
+    contentType: 'application/json',
+    data,
+    baseURL: ''
+  })
+}
+export function update(data) {
+  return request({
+    url: '/api/admin/${pathName}/v1/update',
+    method: 'post',
+    contentType: 'application/json',
+    data,
+    baseURL: ''
+  })
+}
+export function deleta(data) {
+  return request({
+    url: '/api/admin/${pathName}/v1/delete',
+    method: 'post',
+    contentType: 'application/json',
+    data,
+    baseURL: ''
+  })
+}

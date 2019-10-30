@@ -1,0 +1,227 @@
+<template>
+  <div class="app-container">
+    <div class="filter-container">
+
+      <el-input v-model="listQuery.param.assignCompanyName" placeholder="外派公司" style="width: 200px" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input v-model="listQuery.param.orderId" placeholder="订单号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+
+
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="getList">搜索</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="savePage">添加</el-button>
+    </div>
+
+      <el-table :data="list" style="width: 100%">
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <el-form label-position="left" inline class="demo-table-expand">
+            #foreach ($column in $columns)
+            
+             <el-form-item label="$column.comments">
+                <span>{{ scope.row.$column.attrname }}</span>
+             </el-form-item>
+			#end
+
+            </el-form>
+          </template>
+        </el-table-column>
+        
+          #foreach ($column in $columns)
+            <el-table-column label="$column.comments" prop="$column.attrname"></el-table-column>
+			#end
+
+        <!--按钮-->
+        <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="update(scope.$index,scope.row)">编辑</el-button>
+            <el-button  type="danger" size="mini" @click.native.prevent="deleteRow(scope.$index,list , scope.row)" >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.currPage" :limit.sync="listQuery.pageSize" @pagination="getList" />
+
+
+
+    <!--悬浮框 -->
+    <el-dialog :title="dialogBean.title" :visible.sync="dialogBean.show">
+      <!--表单-->
+      <el-form ref="dataForm"   label-position="left" label-width="70px" style="width: 450px; margin-left:50px;">
+		  #foreach ($column in $columns)
+            
+             <el-form-item label="$column.comments">
+                 <el-input v-model="form.param.$column.attrname"/>
+             </el-form-item>
+		 #end
+      </el-form>
+      <!--按钮-->
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogBean.show = false">{{ $t('table.cancel') }}</el-button>
+        <el-button type="primary" @click="saveToUpdate">{{ $t('table.confirm') }}</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { list, info, save, update, delata } from '@/api/assign'
+import waves from '@/directive/waves' // Waves directive
+import { parseTime } from '@/utils'
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+
+const calendarTypeOptions = [
+  { key: 'CN', display_name: 'China' },
+  { key: 'US', display_name: 'USA' },
+  { key: 'JP', display_name: 'Japan' },
+  { key: 'EU', display_name: 'Eurozone' }
+]
+
+// arr to obj ,such as { CN : "China", US : "USA" }
+const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
+  acc[cur.key] = cur.display_name
+  return acc
+}, {})
+
+export default {
+  name: 'ComplexTable',
+  components: { Pagination },
+  directives: { waves },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        published: 'success',
+        draft: 'info',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    },
+    typeFilter(type) {
+      return calendarTypeKeyValue[type]
+    }
+  },
+  data() {
+    return {
+      examineResult: '',
+      //悬浮框
+      dialogBean : {
+        show : false,
+        title : "新增"
+      },
+      // 分页查询对象
+      listQuery: {
+        tenantId : 0,
+        companyId : 0,
+        pageSize: 10,//每页显示条数
+        currPage: 1,//当前页
+        param: {//查询参数
+        }
+      },
+      // 列表对象
+      list: null,
+      detaleBean: {
+        tenantId: 0,
+        companyId: 0,
+      },
+      // 表单对象
+      form: {
+        tenantId: 0,
+        companyId: 0,
+        param:{}
+      },
+      // 总条数
+      total: 0,
+      calendarTypeOptions
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    //保存
+    saveToUpdate() {
+      if (this.form.param.${pk.attrName} === undefined || this.form.param.${pk.attrName} === "" || this.form.param.${pk.attrName} === null) {
+        save(this.form).then(response => {
+          if (response.data.code === 0) {
+            this.$message({
+              message: '添加成功',
+              type: 'success'
+            });
+          } else {
+            this.$message.error({message: response.data.ms});
+          }
+          this.dialogBean.show = false
+        })
+      } else {
+        update(this.form).then(response => {
+          if (response.data.code === 0) {
+            this.$message({
+              message: '修改成功',
+              type: 'success'
+            });
+          } else {
+            this.$message.error({message: response.data.ms});
+          }
+          this.dialogBean.show = false
+        })
+      }
+
+      this.getList()
+    },
+    update(index, row) {
+      this.form.param = JSON.parse(JSON.stringify(row))
+      this.dialogBean.show = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    getList() {
+      assignList(this.listQuery).then(response => {
+        this.list = response.data.data.list
+        this.total = response.data.data.totalCount
+      })
+    },
+    deleteRow(index, rows , row) {
+      rows.splice(index, 1)
+      this.detaleBean.param = row.${pk.attrName}
+      deleta(this.detaleBean).then(response => {
+        if (response.data.code=== 0){
+          this.total = this.total - 1;
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+        }else{
+          this.$message.error({message: response.data.ms});
+        }
+        this.dialogBean.show = false
+      })
+    },
+    savePage(){
+      this.form.param = {}
+        this.dialogBean.show = true
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
+        })
+
+    }
+
+  }
+}
+</script>
+
+<style scoped>
+  @import url("//unpkg.com/element-ui@2.4.11/lib/theme-chalk/index.css");
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand  {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
+  .app-container{
+    overflow: hidden;
+  }
+</style>

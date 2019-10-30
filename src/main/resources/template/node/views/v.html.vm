@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<!-- Content Header (Page header) -->
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-success">
+			<div class="box-body">
+				<form class="has-success">
+					<div class="form-group ">
+						<!--<form class="form-inline">-->
+						<label>
+							<label class="control-label" for="startTime">时间</label>
+						</label>
+						<label>
+							<input type="text" class="form-control input-sm"  id="startTime" placeholder="开始时间"/>
+						</label>
+						<label>
+							<label class="control-label" for="endTime">-</label>
+						</label>
+						<label>
+							<input type="text" class="form-control input-sm"  id="endTime" placeholder="结束时间"/>
+						</label>
+						<label>
+							<label class="control-label" for="wechatOrderId">微信交易号</label>
+						</label>
+						<label>
+							<input type="text" class="form-control input-sm"  id="wechatOrderId" placeholder="请输入"/>
+						</label>
+						<label>
+							<a class="btn btn-block btn-success btn-sm" onclick="initDataTables();" ><i class="fa fa-search"></i>查询</a>
+						</label>
+						<% if ( locals.page["aaaaaa"] ) { %>
+						<label>
+							<a class="btn btn-block btn-success btn-sm"  id="reportBtn"><i class="fa fa-search"></i>导出</a>
+						</label>
+						<% } %>
+						<% if ( locals.page["aaaaaa"] ) { %>
+						<label>
+							<a class="btn btn-block btn-danger btn-sm"  id="deleteBtn" ><i class="fa fa-trash-o"></i>删除</a>
+						</label>
+						<% } %>
+						<br/>
+						<br/>
+					</div>
+				</form>
+			</div><!--  /.box-body  -->
+		</div><!--  /.box  -->
+		<div class="box box-success">
+			<div class="box-body">
+				<table id="currentTb" class="table table-bordered table-hover dataTable table-condensed">
+					<thead>
+					<tr>
+						<th style="width:15px"><input type="checkbox" id='checkAllCb'></th>
+						#foreach ($column in $columns)
+							<th>$column.comments </th>
+						#end
+					</tr>
+					</thead>
+				</table>
+			</div><!--  /.box-body  -->
+		</div><!--  /.box  -->
+	</div><!--  /.col-md-12  -->
+</div><!--  /.row  -->
+
+<!-- page script -->
+<script type="text/javascript">
+
+	var currentTb;
+	var startTime = "";
+	var endTime = "";
+	var wechatOrderId = "";
+	$(document).ready(function () {
+		currentTb = initTable();
+		$("#checkAllCb").iCheck({
+			checkboxClass: 'icheckbox_square-green'
+		});
+
+		$("#checkAllCb").on("ifToggled", function (e) {
+			if ($('#checkAllCb').prop("checked")) {
+				$('#currentTb input[type="checkbox"]').iCheck("check");
+			} else {
+				$('#currentTb input[type="checkbox"]').iCheck("uncheck");
+			}
+		});
+
+		$("#startTime").datepicker(
+				{format: 'yyyy-mm-dd',
+					language: 'zh-CN',
+					autoclose: true,
+					todayBtn: true,
+					todayHighlight: true});
+
+		$("#endTime").datepicker(
+				{format: 'yyyy-mm-dd',
+					language: 'zh-CN',
+					autoclose: true,
+					todayBtn: true,
+					todayHighlight: true});
+	});
+
+	/**
+	 * 表格初始化
+	 */
+	function initTable() {
+
+		var table = $('#currentTb').dataTable({
+			"bJQueryUI": true,
+			"sZeroRecords": "没有符合条件的数据",
+			"aaSorting": [],
+			"bFilter": false,
+			"bServerSide": true,
+			"bAutoWidth": true, //是否自适应宽度
+			"sScrollX": "100%",
+			"sScrollXInner": "100%",
+			"bScrollCollapse": true,
+			"aoColumns": [
+				{
+					"mDataProp": "wechatOrderId",
+					"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+						$(nTd).html("<input type='checkbox' class='editor-active' name='checkList' value='" + sData + "'>");
+					}
+				}
+				#foreach ($column in $columns)
+				,{
+					"bVisible": true,
+					"sWidth": "10%",
+					"mDataProp": "$column.attrname",
+				}
+				#end
+			],
+			"aoColumnDefs": [{
+				"sDefaultContent": '',
+				"aTargets": ['_all']
+			}],
+			"bgProcessin": true,
+			oLanguage: {
+				"sLengthMenu": "每页显示 _MENU_ 条记录",
+				"sZeroRecords": "抱歉， 没有找到",
+				"sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+				"sInfoEmpty": "没有数据",
+				"sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+				oPaginate: {
+					"sFirst": "首页",
+					"sPrevious": "前一页",
+					"sNext": "后一页",
+					"sLast": "尾页"
+				},
+				"sProcessing": "<i class='fa fa-refresh fa-spin'></i>"
+			},
+			"fnCreatedRow": function (nRow, aData, iDataIndex) {
+
+				//add selected class
+				$(nRow).click(function () {
+					if ($(this).hasClass('row-selected')) {
+						$(this).removeClass('row-selected');
+
+					} else {
+						currentTb.$('tr.row-selected').removeClass('row-selected');
+						$(this).addClass('row-selected');
+					}
+				});
+			},
+			"fnInitComplete": function (oSettings, json) {
+				$("#deleteBtn").click(deleteList);
+				$('#reportBtn').click(exportData);
+			},
+			"fnDrawCallback": function (oSettings) {
+				$('#checkAllCb').iCheck("uncheck");
+				$('#currentTb input[type="checkbox"]').iCheck("uncheck");
+				$('#currentTb input[type="checkbox"]').iCheck({
+					checkboxClass: 'icheckbox_square-green'
+				});
+			},
+			"sAjaxSource": "<%=root%>/xxxx/list",
+			"fnServerData": function (sSource, aoData, fnCallback) {
+				var sort = "";
+				if (currentTb) {
+					var lastSort = currentTb.fnSettings().aLastSort;
+					if (lastSort.length > 0) {
+						var columns = currentTb.fnSettings().aoColumns;
+						sort = columns[lastSort[0].col].mData + " " + lastSort[0].dir;
+					}
+				}
+				$.ajax({
+					type: 'post',
+					url: sSource,
+					dataType: "json",
+					data: {
+						"startTime": startTime,
+						"endTime": endTime,
+						"routeId": $('#routeSelect').val(),
+						"wechatOrderId":wechatOrderId,
+						sort: sort,
+						aoData: JSON.stringify(aoData)
+					},
+					success: function (resp) {
+						if (resp.err) {
+							$.messager.popup("系统异常");
+							fnCallback(null);
+						} else {
+							fnCallback(resp);
+							getTotalPrice(resp.data);
+						}
+					}
+				});
+			}
+		});
+		return table;
+	}
+
+	/**
+	 * 数据重新检索
+	 */
+	function initDataTables() {
+		startTime = $('#startTime').val();
+		endTime= $('#endTime').val();
+		// wechatOrderId= $('#wechatOrderId').val();
+		currentTb._fnAjaxUpdate();
+		getTotalPrice();
+	}
+
+
+	/**
+	 * 批量删除
+	 */
+	function deleteList() {
+
+		var rows = $("input[name='checkList']:checked").closest("tr");
+
+		//var selected = currentTb.fnGetData(rows[0]);
+
+		var str = '';
+		rows.each(function (i, o) {
+			str += currentTb.fnGetData(this).id;
+			str += ",";
+		});
+		if (str.length > 0) {
+			$.messager.confirm("操作提示", "确定要删除吗？", function () {
+				var ids = str.substr(0, str.length - 1);
+				$.ajax({
+					type: 'post',
+					url: "<%=root%>/xxxx/delete",
+					data: {"ids": ids},
+					dataType: "json",
+					success: function (result) {
+						if (result.success) {
+							$.messager.popup(result.msg);
+						}
+						else if (result.err) {
+							$.messager.popup("删除失败");
+						} else {
+							currentTb.fnDraw(false);
+							initDataTables();
+							$.messager.popup("删除成功");
+						}
+					}
+				});
+			});
+		} else {
+			$.messager.popup("至少选择一条记录操作");
+		}
+	}
+	/*
+    * 导出资金流水数据
+    **/
+	function exportData(){
+		startTime = $('#startTime').val();
+		endTime= $('#endTime').val();
+		wechatOrderId= $('#wechatOrderId').val();
+		window.location.href = "<%=root%>/mw/exportData?startTime="+startTime+"&endTime="+endTime+"&wechatOrderId="+wechatOrderId;
+	}
+
+</script>

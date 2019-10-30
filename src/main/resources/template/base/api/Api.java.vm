@@ -1,0 +1,203 @@
+package ${package}.${moduleName}.controller;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.*;
+
+import cn.silucaihong.common.log.LogAnnotation;
+import ${package}.common.*;
+import ${package}.${moduleName}.entity.${className};
+import ${package}.${moduleName}.service.${className}Service;
+
+/**
+ * <p>
+ * ${comments}PB接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@RestController
+@RequestMapping("/${moduleName}/${pathName}")
+public class ${className}Api {
+   
+	@Autowired
+    private ${className}Feign ${classname}Feign;
+
+     /**
+     * 保存${className}
+     * @param param
+     * @return Boolean
+     */
+    @LogAnnotation("保存${comments}")
+    @PostMapping(value="/save")
+    public ${className}PB.${className}Response save(@RequestBody RequestBean<${className}> param) throws Exception {
+		${className}PB.${className}Response.Builder response = ${className}PB.${className}Response.newBuilder();
+        CommonPB.ApiResult.Builder resultPb = CommonPB.ApiResult.newBuilder();
+        
+        try {
+			 //参数校验
+	        if (param == null || param.getTenantId() == null || param.getTenantId() < 0 || param.getParam() == null){
+	            resultPb.setCode(PbResponseStatusEnum.PARAMETERS_ERROR.getCode());
+	            resultPb.setMessage(PbResponseStatusEnum.PARAMETERS_ERROR.getDesc());
+	            response.setStatus(resultPb);
+	            return response.build();
+	        }
+	        ResultBean<Boolean> resultBean = ${classname}Feign.save(param);
+	        
+	        if (resultBean.getCode() != ResultBean.SUCCESS){
+                resultPb.setCode(PbResponseStatusEnum.SERVER_ERROR.getCode());
+                resultPb.setMessage(PbResponseStatusEnum.SERVER_ERROR.getDesc());
+                response.setStatus(resultPb);
+                return response.build();
+            }
+	        
+	        if (resultBean.getCode() != ResultBean.SUCCESS){
+	            resultPb.setCode(PbResponseStatusEnum.ERROR.getCode());
+	            resultPb.setMessage(PbResponseStatusEnum.ERROR.getDesc());
+	            response.setStatus(resultPb);
+	        }else {
+	            resultPb.setCode(PbResponseStatusEnum.OK.getCode());
+	            resultPb.setMessage(PbResponseStatusEnum.OK.getDesc());
+	            response.setStatus(resultPb);
+	        }
+		}catch (Exception e){
+			e.printStackTrace();
+			CommonPB.ApiResult.Builder result = CommonPB.ApiResult.newBuilder();
+			result.setCode(PbResponseStatusEnum.TIME_OUT.getCode());
+			result.setMessage(PbResponseStatusEnum.TIME_OUT.getDesc());
+			response.setStatus(result);
+		}
+        return response.build();
+    }
+
+	 /**
+     * $${comments}详细信息
+     * @param param
+     * @return ${className}
+     */
+    @LogAnnotation("${comments}详细信息")
+    @PostMapping(value = "/info")
+    public  ${className}PB.${className}Response info(@RequestBody RequestBean<${pk.attrType}> param){
+        ${className}PB.${className}Response.Builder response = ${className}PB.${className}Response.newBuilder();
+        CommonPB.ApiResult.Builder resultPb = CommonPB.ApiResult.newBuilder();
+        
+		try {
+			 //参数校验
+        if (param == null || param.getTenantId() == null || param.getTenantId() < 0 || param.getParam() == null){
+            resultPb.setCode(PbResponseStatusEnum.PARAMETERS_ERROR.getCode());
+            resultPb.setMessage(PbResponseStatusEnum.PARAMETERS_ERROR.getDesc());
+            response.setStatus(resultPb);
+            return response.build();
+        }
+        ${className}PB.${className}.Builder ${classname} = ${className}PB.${className}.newBuilder();
+        ResultBean<${className}> resultBean = ${classname}Feign.info(param);
+        if (resultBean.getCode() != ResultBean.SUCCESS){
+            resultPb.setCode(PbResponseStatusEnum.ERROR.getCode());
+            resultPb.setMessage(PbResponseStatusEnum.ERROR.getDesc());
+            response.setStatus(resultPb);
+            return response.build();
+        }else if (resultBean.getData()!=null){
+			#foreach ($column in $columns)
+			if (UtilFuns.isNotEmpty(resultBean.getData().get${column.attrName}())) {
+			#if( $column.attrType == "Date")
+			${classname}.set${column.attrName}(resultBean.getData().get${column.attrName}().getTime());
+			#elseif( $column.attrType == "BigDecimal")
+			${classname}.set${column.attrName}(resultBean.getData().get${column.attrName}().doubleValue());
+			#else
+			${classname}.set${column.attrName}(resultBean.getData().get${column.attrName}());				
+			#end
+			}
+			#end
+			resultPb.setCode(PbResponseStatusEnum.OK.getCode());
+            resultPb.setMessage(PbResponseStatusEnum.OK.getDesc());
+            response.setStatus(resultPb);
+        }
+        response.setData(${classname});
+		}catch (Exception e){
+			e.printStackTrace();
+			CommonPB.ApiResult.Builder result = CommonPB.ApiResult.newBuilder();
+			result.setCode(PbResponseStatusEnum.TIME_OUT.getCode());
+			result.setMessage(PbResponseStatusEnum.TIME_OUT.getDesc());
+			response.setStatus(result);
+		}
+        
+        return response.build();
+    }
+	
+
+
+     /**
+     * 分页条件查询${className}
+     * @param param
+     * @return PageBean<${className}>
+     */
+    @LogAnnotation("分页条件查询${className}")
+    @PostMapping(value="/list" )
+    public ${className}PB.${className}ListResponse list(@RequestBody RequestBean<QueryBean<${className}>> param) throws Exception {
+		${className}PB.${className}ListResponse.Builder response = ${className}PB.${className}ListResponse.newBuilder();
+        CommonPB.ApiResult.Builder resultPb = CommonPB.ApiResult.newBuilder();
+       
+       try {
+			
+		 //参数校验
+        if (param == null || param.getTenantId() == null || param.getTenantId() < 0 || param.getParam() == null){
+            resultPb.setCode(PbResponseStatusEnum.PARAMETERS_ERROR.getCode());
+            resultPb.setMessage(PbResponseStatusEnum.PARAMETERS_ERROR.getDesc());
+            response.setStatus(resultPb);
+            return response.build();
+        }
+
+        ResultBean<PageBean<${className}>> resultBean = ${classname}Feign.list(param);
+
+		
+        if (resultBean.getCode() != ResultBean.SUCCESS){
+            resultPb.setCode(PbResponseStatusEnum.SERVER_ERROR.getCode());
+            resultPb.setMessage(PbResponseStatusEnum.SERVER_ERROR.getDesc());
+            response.setStatus(resultPb);
+            return response.build();
+        }
+
+        for ( ${className}  ${classname}:  resultBean.getData().getList()) {
+            ${className}PB.${className}.Builder ${classname}Pb = ${className}PB.${className}.newBuilder();
+            #foreach ($column in $columns)
+			if (UtilFuns.isNotEmpty(${classname}.get${column.attrName}())) {	
+				#if( $column.attrType == "Date")
+					${classname}Pb.set${column.attrName}(${classname}.get${column.attrName}().getTime());
+				#elseif( $column.attrType == "BigDecimal")
+					${classname}Pb.set${column.attrName}(${classname}.get${column.attrName}().doubleValue());
+				#else
+					${classname}Pb.set${column.attrName}(${classname}.get${column.attrName}());				
+				#end
+			}
+			#end
+            response.addData(${classname}Pb);
+        }
+      	resultPb.setCode(PbResponseStatusEnum.OK.getCode());
+        resultPb.setMessage(PbResponseStatusEnum.OK.getDesc());
+        response.setStatus(resultPb);
+
+        CommonPB.ApiPager.Builder pagePB = CommonPB.ApiPager.newBuilder();
+        pagePB.setPageIndex(resultBean.getData().getCurrPage());
+        pagePB.setPageSize(resultBean.getData().getPageSize());
+        pagePB.setTotalRecord(resultBean.getData().getTotalCount());
+        response.setPage(pagePB);
+        	
+        	
+		}catch (Exception e){
+			e.printStackTrace();
+			CommonPB.ApiResult.Builder result = CommonPB.ApiResult.newBuilder();
+			result.setCode(PbResponseStatusEnum.TIME_OUT.getCode());
+			result.setMessage(PbResponseStatusEnum.TIME_OUT.getDesc());
+			response.setStatus(result);
+		}
+       
+       
+        
+        return response.build();
+    }
+
+
+
+}

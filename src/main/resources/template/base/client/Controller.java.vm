@@ -1,0 +1,124 @@
+package ${package}.admin.controller;
+
+import ${package}.api.${className}Api;
+import ${package}.common.model.request.ParamBean;
+import ${package}.common.model.response.ApiResult;
+import ${package}.common.model.response.PageBean;
+import ${package}.common.model.response.ResponseResult;
+import ${package}.common.model.response.ResultBean;
+import ${package}.entity.${className};
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * <p>
+ * ${comments}接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@RestController
+@RequestMapping("/${pathName}")
+@Slf4j
+public class ${className}Controller {
+    @Autowired
+    private ${className}Api ${classname}Api;
+
+    /**
+     * 保存${className}
+     *
+     * @param param
+     * @return Boolean
+     */
+
+    @PostMapping(value = "/save")
+    public ApiResult save(@RequestBody ${className} param) throws Exception {
+        ApiResult apiResult = new ApiResult();
+        ResponseResult responseResult = ${classname}Api.save(param);
+        apiResult.setCode(responseResult.getCode());
+        apiResult.setMessage(responseResult.getMsg());
+        return apiResult;
+
+    }
+
+    /**
+     * 通过主键获取${className}详细信息
+     *
+     * @param key
+     * @return ${className}
+     */
+    @GetMapping(value = "/info/{key}")
+    public ApiResult<${className}> info(@PathVariable("key") ${pk.attrType} key) throws Exception {
+
+        ApiResult<${className}> apiResult = new ApiResult();
+        ResultBean<${className}> resultBean = ${classname}Api.info(key);
+        apiResult.setCode(resultBean.getCode());
+        apiResult.setMessage(resultBean.getMsg());
+        if (resultBean.isSuccess()){
+            apiResult.setData(resultBean.getData());
+        }
+        return apiResult;
+    }
+
+    /**
+     * 分页条件查询${className}
+     *
+     * @param params
+     * @return PageBean<${className}>
+     */
+
+    @PostMapping(value = "/list")
+    public ApiResult<List<${className}>> list(@RequestBody ParamBean<${className}> params) throws Exception {
+
+        ApiResult<List<${className}>> apiResult = new ApiResult();
+        ResultBean<PageBean<${className}>>resultBean = ${classname}Api.list(params);
+        apiResult.setCode(resultBean.getCode());
+        apiResult.setMessage(resultBean.getMsg());
+        if (resultBean.isSuccess()){
+            apiResult.setPageInfo(resultBean.getData().getCurrPage(),resultBean.getData().getPageSize(),resultBean.getData().getTotalCount());
+            apiResult.setData(resultBean.getData().getList());
+        }
+        return apiResult;
+    }
+
+
+    /**
+     * 根据主键修改${className}
+     *
+     * @param param
+     * @return Boolean
+     */
+
+    @PostMapping(value = "/update")
+    public ApiResult update(@RequestBody ${className} param) throws Exception {
+        log.info("request param:{}",param.toString());
+        ApiResult apiResult = new ApiResult();
+        ResponseResult responseResult = ${classname}Api.update(param);
+        apiResult.setCode(responseResult.getCode());
+        apiResult.setMessage(responseResult.getMsg());
+        return apiResult;
+    }
+    /**
+     * 删除${className}
+     *
+     * @param param
+     * @return
+     */
+    @PostMapping(value = "/delete")
+    public ApiResult<Integer> delete(@RequestBody List<${pk.attrType}> param) throws Exception {
+
+        ApiResult<Integer> apiResult = new ApiResult();
+        ResultBean<Integer> resultBean = ${classname}Api.delete(param);
+        apiResult.setCode(resultBean.getCode());
+        apiResult.setMessage(resultBean.getMsg());
+        if (resultBean.isSuccess()){
+            apiResult.setData(resultBean.getData());
+        }
+        return apiResult;
+    }
+
+}

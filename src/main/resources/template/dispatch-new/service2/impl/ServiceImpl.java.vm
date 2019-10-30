@@ -1,0 +1,73 @@
+package ${package}.${moduleName}.service.impl;
+
+import java.util.Date;
+ 
+import org.springframework.stereotype.Service;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
+import ${package}.${moduleName}.dao.${className}Mapper;
+import ${package}.${moduleName}.entity.${className};
+import ${package}.${moduleName}.service.${className}Service;
+
+/**
+ * <p>
+ * ${comments}服务
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@Service
+public class ${className}ServiceImpl implements ${className}Service {
+
+	@Autowired
+	private${className}Mapper ${classname}Mapper;
+
+	  @Override
+	public boolean save${className}(${className} param) throws Exception {
+		param.setCreateTime(new Date());
+		return (${classname}Mapper.insert(param) == 1);
+	}
+
+	@Override
+	public boolean update${className}(${className} param) throws Exception {
+		param.setUpdateTime(new Date());
+		return true;
+	}
+	
+		
+	@Override
+	public ${className} get${className}ByKey(${className} param) throws Exception {
+		return ;
+	}
+	
+	
+	@Override
+	public ${className} get${className}(${className} param) throws Exception {
+		
+		${className}Example example = this.getExample(param);
+		
+        List<${className}> list = ${classname}Mapper.selectByExample(example);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      		
+	    return  list.size()>0 ? list.get(0) :null;
+		
+	}
+
+
+	@Override
+	public int remove${className}Sham(${className} param) throws Exception {
+		return 0;
+	}
+	
+
+	@Override   
+	public List<${className}>  list${className}Page(Integer pageNo,Integer pageSize,${className} param) throws Exception {
+			
+		return null;
+	}
+
+	@Override
+	public int count${className}(${className} param) throws Exception {
+		return ${classname}Mapper.countByExample(example);
+	}
+}

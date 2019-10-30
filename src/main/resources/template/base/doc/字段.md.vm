@@ -1,0 +1,9 @@
+# ${comments}(${className})
+
+
+
+| **字段名** | **类型** | **必传字段** | **名称** | **描述** |
+| :--------: | :------:| :------: | :------: | :------: |
+#foreach ($column in $columns)
+|$column.attrname            | $column.attrType   |      |  $column.comments        | $column.comments         |
+#end

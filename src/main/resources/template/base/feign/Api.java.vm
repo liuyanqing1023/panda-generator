@@ -1,0 +1,67 @@
+package ${package}.api;
+
+import ${package}.common.model.request.ParamBean;
+import ${package}.common.client.RainbowsServiceList;
+import ${package}.common.model.response.CommonCode;
+import ${package}.common.model.response.PageBean;
+import ${package}.common.model.response.ResponseResult;
+import ${package}.common.model.response.ResultBean;
+import ${package}.entity.${className};
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+/**
+ * <p>
+ * ${comments}服务接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@FeignClient(RainbowsServiceList.EBUS_SERVICE)
+public interface ${className}Api {
+
+     /**
+     * 保存${className}
+     * @param param
+     * @return Boolean
+     */
+    @PostMapping(value="/${pathName}/save")
+    ResponseResult save(@RequestBody ${className} param);
+
+	 /**
+     * 通过主键获取${className}详细信息
+     * @param key
+     * @return ${className}
+     */
+    @GetMapping(value="/${pathName}/info")
+    ResultBean<${className}> info(@PathVariable("key") ${pk.attrType} key);
+	
+
+     /**
+     * 分页条件查询${className}
+     * @param params
+     * @return PageBean<${className}>
+     */
+    @PostMapping(value="/${pathName}/list" )
+    ResultBean<PageBean<${className}>> list(@RequestBody ParamBean<${className}> params);
+
+  /**
+   * 根据主键修改${className}
+   * @param param 修改后的数据(包含主键)
+   * @return Boolean
+   */
+    @PostMapping(value="/${pathName}/update")
+    ResponseResult update(@RequestBody ${className} param);
+
+	/**
+     * 删除${className}
+     * @param param 主键集合
+     * @return
+     */
+    @PostMapping(value="/${pathName}/delete")
+    ResultBean<Integer>  delete(@RequestBody List<${pk.attrType}> param);
+
+}

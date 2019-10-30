@@ -1,0 +1,96 @@
+var express = require('express');
+var router = express.Router();
+var nodeExcel = require('excel-export');
+
+/**
+ * ${comments}路由
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+
+		var router = express.Router();
+		/*  【${comments}】 列表*/
+		router.post('/list', function (req, res) {
+		var dao = require("../dao/dao.${tableName}");
+		dao.list(req.body, function (data) {
+
+		res.json(data);
+		});
+		});
+		/*  【${comments}】 批量删除*/
+		router.post('/delete', function (req, res) {
+		var dao = require("../dao/dao.${tableName}");
+		dao.delete(req.body, function (data) {
+		res.json(data);
+		});
+		});
+		/*  【${comments}】 新增*/
+		router.post('/save', function (req, res) {
+		var dao = require("../dao/dao.${tableName}");
+		dao.save(req.body, function (data) {
+		res.json(data);
+		});
+		});
+
+/*  【订单计划】列表导出 */
+router.get('/export', function (req, res) {
+	var dao = require("../dao/dao.stat_number_plans");
+	dao.exportData(req.query, function (data) {
+		var datas = new Array();
+		for (var i = 0; i < data.data.length; i++) {
+			var parms = [];
+
+			#foreach ($column in $columns)
+				//$column.comments
+				if (data.data[i].$column.attrname === null) {
+					parms.push("");
+				} else {
+					parms.push(data.data[i].$column.attrname);
+				}
+			#end
+
+			datas.push(parms);
+		}
+		var conf = {};
+		conf.cols = [
+		#foreach ($column in $columns)
+			,{
+				caption: '$column.comments',
+            #if( $column.attrType == "String" || $column.attrType == "Date")
+                type: 'string',
+            #elseif( $column.attrType == "Integer" || $column.attrType == "int"
+            || $column.attrType == "Long" || $column.attrType == "long"
+            ||  $column.attrType == "double" ||  $column.attrType == "Double" ||$column.attrType == "float" ||  $column.attrType == "Float" ||  $column.attrType == "BigDecimal"
+            )
+                type: 'number',
+            #end
+				width: 30
+			}
+
+		#end
+
+		];
+		var myDate = new Date();
+		var year = myDate.getFullYear();
+		var month = myDate.getMonth() + 1;
+		var day = myDate.getDate();
+		var hour = myDate.getHours();
+		var minutes = myDate.getMinutes();
+		var second = myDate.getSeconds();
+		conf.rows = datas;
+		var result = nodeExcel.execute(conf);
+		res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+		var fileName = "${comments}-" + year + "-" + month + "-" +
+				+day + " " + hour + "\:" + minutes + "\:" + second + ".xlsx";
+		res.setHeader("Content-Disposition", "attachment; filename=" + new Buffer(fileName).toString('binary'));
+		res.end(result, 'binary');
+	});
+});
+
+
+
+
+
+
+module.exports = router;

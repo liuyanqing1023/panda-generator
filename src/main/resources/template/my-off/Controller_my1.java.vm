@@ -1,0 +1,119 @@
+package ${package}.${moduleName}.controller;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.service.${className}Service;
+import ${mainPath}.common.utils.PageUtils;
+import ${mainPath}.common.utils.R;
+
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@RestController
+@RequestMapping("${pathName}")
+public class ${className}Controller {
+    @Autowired
+    private ${className}Service ${classname}Service;
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("${pathName}:list")
+    public R list(@RequestParam Map<String, Object> params){
+        //设置分页数据
+		int page = Integer.parseInt(params.get("page").toString());
+		int limit = Integer.parseInt(params.get("limit").toString());
+		QueryBean<${className}> qb = new QueryBean<${className}>();
+		qb.setPageSize(limit);
+		qb.setCurrPage(page);
+
+    	ResultBean<PageUtils<${className}>> resultBean = ${classname}Service.list(qb);
+		
+		if (resultBean.getCode() == ResultBean.SUCCESS) {
+			return R.ok().put("page", resultBean.getData());
+        }
+		return R.error(resultBean.getMsg());
+    }
+
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/info/{${pk.attrname}}")
+    @RequiresPermissions("${pathName}:info")
+    public R info(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){        
+        ResultBean<${className}> resultBean = ${classname}Service.info(id);
+        
+        if (resultBean.getCode() == ResultBean.SUCCESS) {
+        	return R.ok().put("${classname}", resultBean.getData());
+        }
+        return R.error(resultBean.getMsg());
+        
+        
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("${pathName}:save")
+    public R save(@RequestBody ${className} ${classname}){     
+        
+        SysUserEntity user = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+    	${classname}.setCreateName(user.getUsername());
+		ResultBean<Boolean> resultBean = ${classname}Service.save(${classname});
+
+		if (resultBean.getCode() == ResultBean.SUCCESS) {
+			return R.ok();
+        }
+		return R.error(resultBean.getMsg());
+        
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("${pathName}:update")
+    public R update(@RequestBody ${className}  ${classname}){
+		SysUserEntity user = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+    	${classname}.setUpdateName(user.getUsername());
+		ResultBean<Boolean> resultBean = ${classname}Service.update(${classname});
+
+		if (resultBean.getCode() == ResultBean.SUCCESS) {
+			return R.ok();
+        }
+		return R.error(resultBean.getMsg());
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("${pathName}:delete")
+    public R delete(@RequestBody ${pk.attrType}[] ${pk.attrname}s){
+		ResultBean<Integer> resultBean = ${classname}Service.delete(Arrays.asList(ids));
+
+		if (resultBean.getCode() == ResultBean.SUCCESS) {
+			return R.ok();
+	    }
+		return R.error(resultBean.getMsg());
+    }
+
+}

@@ -1,0 +1,32 @@
+
+接口说明
+接口调用请求说明
+
+/${moduleName}/${pathName}
+
+
+参数        是否必须     名称        说明 
+
+#foreach ($column in $columns)
+#{$column.attrname}             ($column.attrType)       $column.comments       
+#end
+
+返回说明
+正常情况下，接口会返回下述Protobuffer格式数据：
+
+
+
+参数  说明
+#foreach ($column in $columns)
+#{$column.attrname}                   $column.comments       
+#end
+
+错误时会返回错误码等信息，示例如下:
+{
+    "status": {
+        "code": 300,
+        "message": "请求失败"
+}
+}
+
+

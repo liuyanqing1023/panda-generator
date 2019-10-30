@@ -1,0 +1,115 @@
+package ${package}.${moduleName}.controller;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.*;
+
+import cn.silucaihong.common.log.LogAnnotation;
+import ${package}.common.*;
+import ${package}.${moduleName}.entity.${className};
+import ${package}.${moduleName}.service.${className}Service;
+
+/**
+ * <p>
+ * ${comments}服务接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@RestController
+@RequestMapping("/${pathName}")
+public class ${className}Controller {
+    @Autowired
+    @Qualifier("${classname}ServiceImpl")
+    private ${className}Service ${classname}Service;
+
+     /**
+     * 保存${className}
+     * @param param
+     * @return Boolean
+     */
+    @LogAnnotation("保存${className}")
+    @PostMapping(value="/save")
+    public ResultBean<Boolean> save(@RequestBody RequestBean<${className}> param) throws Exception {
+		//参数校验
+		if (param == null || param.getParam() == null){
+			return  new ResultBean<>("参数有误!");
+		}
+		return  new ResultBean<>(${classname}Service.save${className}(param.getParam()));
+    }
+
+	 /**
+     * 通过主键获取${className}详细信息
+     * @param param
+     * @return ${className}
+     */
+    @LogAnnotation("通过主键获取${className}详细信息")
+    @PostMapping(value="/info")
+    public ResultBean<${className}> info(@RequestBody RequestBean<${pk.attrType}> param) throws Exception {
+		//参数校验
+		if (param == null ||  param.getParam() == null){
+			return  new ResultBean<>("参数有误");
+		}
+		${className} ${classname} = new ${className}();
+		${classname}.set${pk.attrName}(param.getParam());
+		
+		return  new ResultBean<>(${classname}Service.get${className}(${classname}));
+    }
+	
+
+
+     /**
+     * 分页条件查询${className}
+     * @param param
+     * @return PageBean<${className}>
+     */
+    @LogAnnotation("分页条件查询${className}")
+    @PostMapping(value="/list" )
+    public ResultBean<PageBean<${className}>> list(@RequestBody RequestBean<QueryBean<${className}>> param) throws Exception {
+		//参数校验
+		if (param == null ||  param.getParam() == null){
+			return  new ResultBean<>("参数有误!");
+		}
+		 return new ResultBean<PageBean<${className}>>(${classname}PageBean);
+    }
+
+
+  /**
+   * 根据主键修改${className}
+   * @param param
+   * @return Boolean
+   */
+    @LogAnnotation("根据主键修改${className}")
+    @PostMapping(value="/update")
+    public ResultBean<Boolean> update(@RequestBody RequestBean<${className}> param) throws Exception {
+		//参数校验
+		if (param == null || param.getParam() == null){
+			return  new ResultBean<>("参数有误!");
+		}
+	
+		${className} ${classname} = new ${className}();
+		${classname}.set${pk.attrName}(param.getParam().get${pk.attrName}());
+
+		return new ResultBean<>(${classname}Service.update${className}(param.getParam(), ${classname})>0);
+    }
+
+	/**
+     * 删除${className}
+     * @param param
+     * @return
+     */
+    @LogAnnotation("通过ID删除${className}")
+    @PostMapping(value="/delete")
+    public ResultBean<Boolean>  delete(@RequestBody RequestBean<${pk.attrType}> param) throws Exception {
+		//参数校验
+		if (param == null || param.getParam() == null){
+			return  new ResultBean<>("参数有误!");
+		}
+		${className} ${classname} = new ${className}();
+		${classname}.set${pk.attrName}(param.getParam());
+		return new ResultBean<>(${classname}Service.remove${className}(${classname})>0);
+    }
+
+}

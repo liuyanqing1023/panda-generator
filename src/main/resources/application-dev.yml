@@ -1,0 +1,16 @@
+# mysql
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://106.15.89.158:3306/d_ebus?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: JS.123456
+
+generator:
+    mainPath: cn.silucaihong
+    packageName: cn.silucaihong
+    moduleName: rainbowbus
+    author: LYQ
+    email: sunlightcs@gmail.com
+    tablePrefix: sr

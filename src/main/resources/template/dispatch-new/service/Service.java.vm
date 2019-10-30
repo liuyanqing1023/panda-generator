@@ -1,0 +1,85 @@
+package ${package}.${moduleName}.service;
+
+import ${package}.${moduleName}.entity.${className};
+import com.github.pagehelper.PageInfo;
+
+import java.util.List;
+
+/**
+ * <p>
+ * ${comments}服务接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+public interface ${className}Service {
+
+    /**
+	 * 保存 ${className}
+	 * @param param
+	 * @throws Exception
+	 */
+	boolean save${className}(${className} param) throws Exception;
+	
+	/**
+	 * 修改 ${className}
+	 * @param param ： ${className}
+	 * @return boolean
+	 * @throws Exception
+	 */
+	int update${className}(${className} entity,${className} param) throws Exception;
+	
+	/**
+	 * 条件查询一条 ${comments}
+	 * @param param ： ${className}
+	 * @return ${className}
+	 * @throws Exception
+	 */
+	${className} get${className}(${className} param) throws Exception;
+	
+	/**
+	 * 根据条件删除 ${className}
+	 * @param param ： ${className}
+	 * @return int
+	 * @throws Exception
+	 */
+	int remove${className}(${className} param) throws Exception;
+	
+	/**
+	 * 伪删除 ${className}
+	 * @param param ： ${className}
+	 * @return int
+	 * @throws Exception
+	 */
+	int remove${className}Sham(${className} param) throws Exception;
+	
+	
+	/**
+	 * 分页查询
+	 * @param currPage ： 当前页
+	 * @param pageSize ： 每页显示条数
+	 * @param param ： 查询条件
+	 * @return ${className}集合
+	 * @throws Exception
+	 */
+	PageInfo<${className}> list${className}Page(Integer currPage,Integer pageSize,${className} param) throws Exception;
+	
+	/**
+	 * 条件查询
+	 * @param param ： 查询条件
+	 * @return ${className}集合
+	 * @throws Exception
+	 */
+	List<${className}> list${className}( ${className} param) throws Exception;
+	
+	/**
+	 * 查询总条数
+	 * @param queryParam 查询条件
+	 * @return ${className}集合
+	 * @throws Exception
+	 */
+	int count${className}(${className} queryParam) throws Exception;
+	
+}
+

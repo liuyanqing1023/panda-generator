@@ -1,0 +1,33 @@
+package ${package}.${moduleName}.dao;
+
+import ${package}.${moduleName}.entity.${className};
+import ${package}.${moduleName}.dao.example.${className}Example;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+/**
+ * <p>
+ * ${comments}Mapper接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@Mapper
+public interface ${className}Mapper {
+    long countByExample(${className}Example example);
+
+    int deleteByExample(${className}Example example);
+
+    int insert(${className} record);
+
+    int insertSelective(${className} record);
+
+    List<${className}> selectByExample(${className}Example example);
+
+    int updateByExampleSelective(@Param("record") ${className} record, @Param("example") ${className}Example example);
+
+    int updateByExample(@Param("record") ${className} record, @Param("example") ${className}Example example);
+}

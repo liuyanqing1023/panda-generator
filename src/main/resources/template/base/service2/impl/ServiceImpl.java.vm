@@ -1,0 +1,103 @@
+package ${package}.${moduleName}.service.impl;
+
+import java.util.Date;
+import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import ${package}.${moduleName}.dao.${className}Mapper;
+import ${package}.${moduleName}.dao.example.${className}Example;
+import ${package}.${moduleName}.dao.example.${className}Example.Criteria;
+import ${package}.${moduleName}.entity.${className};
+import ${package}.${moduleName}.service.${className}Service;
+
+
+/**
+ * <p>
+ * ${comments}服务
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@Service
+public class ${className}ServiceImpl implements ${className}Service {
+
+    @Autowired(required = false)
+	private ${className}Mapper ${classname}Mapper;
+
+	@Override
+	public boolean saveOrUpdate(${className} param) throws Exception {
+
+		boolean resule = false;
+		if (param.getId() != null){
+			${className}Example example = new ${className}Example();
+			example.createCriteria().and${pk.attrName}EqualTo(param.get${pk.attrName}());
+			resule = (${classname}Mapper.updateByExampleSelective(param,example) == 1);
+		}else {
+			param.setCreateTime(new Date());
+			resule = (${classname}Mapper.insertSelective(param) == 1);
+		}
+		return resule;
+	}
+	@Override
+	public int update(${className} ${classname},${className} param) throws Exception {
+		return ${classname}Mapper.updateByExampleSelective(${classname}, getExample(param));
+	}
+	@Override
+	public ${className} getByParam(${className} param) throws Exception {
+	    ${className}Example example = getExample(param);
+        List<${className}> list = ${classname}Mapper.selectByExample(example);
+        return (list.size()>0 ? list.get(0) : null);
+	}
+	@Override
+	public ${className} getByKey(${pk.attrType} key) throws Exception {
+		return ${classname}Mapper.selectByPrimaryKey(key);
+	}
+
+	@Override
+	public int remove(${className} param) throws Exception {
+		return 0;
+	}
+	@Override
+	public int removeByKeys(List<${pk.attrType}> param) throws Exception {
+		return 0;
+	}
+	@Override
+	public int removeSham(${className} param) throws Exception {
+		return 0;
+	}
+	@Override
+	public List<${className}> list(Integer currPage,Integer pageSize,${className} param) throws Exception {
+	    ${className}Example example = getExample(param);
+		example.setPageNo(currPage);
+		example.setPageSize(pageSize);
+        return ${classname}Mapper.selectByExample(example);
+	}
+	@Override
+	public List<${className}> list(${className} param) throws Exception {
+	    ${className}Example example = getExample(param);
+        return ${classname}Mapper.selectByExample(example);
+	}
+
+	@Override
+	public long total(${className} param) throws Exception {
+		return ${classname}Mapper.countByExample(getExample(param));
+	}
+
+    /**
+     * 用于查找\删除\修改
+     * @param param
+     * @return
+     */
+    private ${className}Example getExample(${className} param){
+        ${className}Example example = new ${className}Example();
+		if (param == null){return  example;}
+        Criteria criteria = example.createCriteria();
+        if (param.get${pk.attrName}()!=null){
+            criteria.and${pk.attrName}EqualTo(param.get${pk.attrName}());
+            return example;
+        }
+        return  example;
+    }
+}

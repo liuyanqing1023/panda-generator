@@ -1,0 +1,77 @@
+package ${package}.${moduleName}.service;
+
+import ${package}.${moduleName}.entity.${className};
+
+import java.util.List;
+
+/**
+ * <p>
+ * ${comments}服务接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+public interface ${className}Service {
+
+    /**
+	 * 保存 ${className}
+	 * @param t
+	 * @throws Exception
+	 */
+	boolean save(${className} param) throws Exception;
+	
+	/**
+	 * 修改 ${className}
+	 * @param param ： ${className}
+	 * @return boolean
+	 * @throws Exception
+	 */
+	int updateById(${className} param) throws Exception;
+	
+	
+	/**
+	 * 条件查询一条 ${comments}
+	 * @param param ： ${className}
+	 * @return ${className}
+	 * @throws Exception
+	 */
+	${className} getByParam(${className} param) throws Exception;
+	
+	/**
+	 * 根据条件删除 ${className}
+	 * @param param ： ${className}
+	 * @return int
+	 * @throws Exception
+	 */
+	int remove(${className} param) throws Exception;
+	
+	/**
+	 * 伪删除 ${className}
+	 * @param param ： ${className}
+	 * @return int
+	 * @throws Exception
+	 */
+	int removeSham(${className} param) throws Exception;
+	
+	
+	/**
+	 * 分页查询
+	 * @param currPage ： 当前页
+	 * @param pageSize ： 每页显示条数
+	 * @param queryParam ： 查询条件
+	 * @return ${className}集合
+	 * @throws Exception
+	 */
+	List<${className}> listPage(Integer currPage,Integer pageSize,${className} param) throws Exception;
+	
+	/**
+	 * 查询总条数
+	 * @param queryParam 查询条件
+	 * @return ${className}集合
+	 * @throws Exception
+	 */
+	int count(${className} queryParam) throws Exception;
+	
+}
+

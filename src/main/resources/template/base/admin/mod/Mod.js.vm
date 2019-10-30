@@ -1,0 +1,32 @@
+
+//src\router\index.js  中需要添加的数据:
+import ${classname}Router from './modules/${classname}'
+  ${classname},
+  
+  
+  
+
+/** When your routing table is too long, you can split it into small modules**/
+
+import Layout from '@/views/layout/Layout'
+const ${classname}Router = {
+  path: '/${classname}',
+  component: Layout,
+  name: '${classname}',
+  meta: {
+    title: ' ${comments}',
+    icon: 'list'
+  },
+  children: [
+    {
+      path: '${classname}',
+      component: () => import('@/viewsSilk/${classname}/${classname}List'),
+      name: '${classname}',
+      meta: {
+        title: ' ${comments}',
+        icon: 'list'
+      }
+    }
+  ]
+}
+export default ${classname}Router

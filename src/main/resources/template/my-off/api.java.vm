@@ -1,0 +1,58 @@
+package ${package}.${moduleName}.api;
+
+import java.util.List;
+
+import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import io.sr.dto.PageUtils;
+import io.sr.dto.QueryBean;
+import io.sr.dto.ResultBean;
+
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@FeignClient("${pathName}_service")
+@RequestMapping("${moduleName}/${pathName}")
+public interface ${className}Service {
+
+    /**
+     * 列表
+     */
+    @RequestMapping(value="/list" , method = RequestMethod.POST)
+    public ResultBean<PageUtils<${className}>> list(@RequestBody QueryBean<${className}> params);
+
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/info/{${pk.attrname}}")
+    public ResultBean<${className}> info(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname});
+
+    /**
+     * 保存
+     */
+    @RequestMapping(value="/save" , method = RequestMethod.POST)
+    public ResultBean<Boolean> save(@RequestBody ${className} request);
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    public ResultBean<Boolean> update(@RequestBody ${className} request);
+
+    /**
+     * 删除
+     */
+    @RequestMapping(value="/delete"  , method = RequestMethod.POST)
+    public ResultBean<Integer>  delete(@RequestBody  List<${pk.attrType}> ${pk.attrname}s);
+
+}

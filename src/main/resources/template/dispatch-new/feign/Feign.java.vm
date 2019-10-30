@@ -1,0 +1,63 @@
+package ${package}.${moduleName}.controller;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+
+import ${package}.common.ResultBean;
+import ${package}.common.PageBean;
+import ${package}.common.QueryBean;
+import ${package}.${moduleName}.entity.${className};
+
+/**
+ * <p>
+ * ${comments}feign服务接口  
+ * </p>
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@FeignClient("silkroad-scheduling-service")
+public interface ${className}Feign {
+
+     /**
+     * 保存${className}
+     * @param param
+     * @return Boolean
+     */
+    @PostMapping(value="/v1/${pathName}/save")
+    ResultBean<Boolean> save(@RequestBody  RequestBean<${className}> param);
+
+	 /**
+     * 通过主键获取${className}详细信息
+     * @param param
+     * @return ${className}
+     */
+    @PostMapping(value="/v1/${pathName}/info")
+    ResultBean<${className}> info(@RequestBody  RequestBean<${pk.attrType}> param);
+	
+
+     /**
+     * 分页条件查询${className}
+     * @param param
+     * @return PageBean<${className}>
+     */
+    @PostMapping(value="/v1/${pathName}/list" )
+    ResultBean<PageBean<${className}>> list(@RequestBody  RequestBean<QueryBean<${className}>> param);
+
+  /**
+   * 根据主键修改${className}
+   * @param param
+   * @return Boolean
+   */
+    @PostMapping(value="/v1/${pathName}/update")
+    ResultBean<Boolean> update(@RequestBody  RequestBean<${className}> param);
+
+	/**
+     * 删除${className}
+     * @param param
+     * @return
+     */
+    @PostMapping(value="/v1/${pathName}/delete")
+   ResultBean<Boolean>  delete(@RequestBody  RequestBean<${pk.attrType}> param);
+
+}

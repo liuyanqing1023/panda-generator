@@ -1,0 +1,18 @@
+package ${package}.${moduleName}.service;
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface ${className}Service extends BaseService<${className}> {
+
+    /**
+	 * 查询总条数
+	 * @param map
+	 */
+	int queryTotal(${className} param)throws Exception;
+}
+

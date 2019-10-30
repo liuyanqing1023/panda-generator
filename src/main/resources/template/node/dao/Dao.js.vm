@@ -1,0 +1,151 @@
+var config = require('../config');
+/**
+ * ${comments}DAO
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+var ${classname}Dao = {
+
+	/**
+	 *  ${comments}分页查询
+	 * @param {type} param
+	 * @param {type} callback
+	 * @returns {undefined}
+	 */
+	listByPage : function(param, callback){
+		var conn = require("../libs/mysql");
+		var countSql = "";
+		var whereSql = "";
+		whereSql += "\n WHERE  1";
+		#foreach ($column in $columns)
+			whereSql += "\n AND $column.columnName  = "+param.$column.attrname;//$column.comments
+		#end
+		var sql =  " SELECT ";
+		#foreach ($column in $columns)
+		sql += "\n $column.columnName AS $column.attrname, ";//$column.comments
+		#end
+		sql += "\n FROM $column.comments";
+		sql += whereSql
+		if (param.start !== undefined && param.length !== undefined) {
+			sql += " limit " + param.start + "," + param.length;
+		}
+		sql += ";"
+		countSql =  " SELECT ";
+		countSql += "\n count(*) AS count ";
+		countSql += "\n FROM ${tableName}";
+		countSql += whereSql;
+		countSql += ";"
+		console.log("sql= "+sql+countSql);
+		conn.query(countSql+sql, function (err, result) {
+			if (err) {
+				console.error(err);
+				return callback({type: "sys", err: err});
+			}
+			var data = {
+				recordsTotal: result[0][0].count,
+				recordsFiltered: result[0][0].count,
+				data: result[1]
+			};
+			return callback(data);
+		});
+	},
+
+	/**
+	 *  ${comments}数据导出
+	 * @param {type} param
+	 * @param {type} callback
+	 * @returns {undefined}
+	 */
+	exportData : function(param, callback){
+		var conn = require("../libs/mysql");
+		var whereSql = "";
+		whereSql += "\n WHERE  1";
+		#foreach ($column in $columns)
+			whereSql += "\n AND $column.columnName  = "+param.$column.attrname;//$column.comments
+		#end
+		var sql =  " SELECT ";
+		#foreach ($column in $columns)
+			#if( $column.attrType == "Date")
+				sql += "\n date_format($column.columnName, '%Y-%m-%d %H:%i:%s') AS $column.attrname, ";//$column.comments
+			#else
+				sql += "\n $column.columnName AS $column.attrname,";
+			#end
+
+		#end
+		sql += "\n FROM $column.comments";
+		sql += whereSql
+		if (param.start !== undefined && param.length !== undefined) {
+			sql += " limit " + param.start + "," + param.length;
+		}
+		console.log("sql= "+sql);
+		conn.query(sql, function (err, result) {
+			if (err) {
+				console.error(err);
+				return callback({type: "sys", err: err});
+			}
+			var data = {
+				recordsTotal: result.length,
+				recordsFiltered: result.length,
+				data: result
+			};
+			return callback(data);
+		});
+	},
+
+	/**
+	 * 批量删除${comments}
+	 * @param {type} param
+	 * @param {type} callback
+	 * @returns {undefined}
+	 */
+	delete : function(param, callback){
+		var conn = require("../libs/mysql");
+		var sql =  " DELETE  FROM ${tableName}";
+		sql += "\n WHERE id IN (" + param.ids;
+		sql += ");"
+
+		console.log("sql= "+sql);
+		conn.query(sql, function (err, result) {
+			if (err) {
+				console.error(err);
+				return callback({type: "sys", err: err});
+			}
+			return callback(result);
+		});
+	},
+
+	/**
+	 * 保存${comments}
+	 * @param {type} param
+	 * @param {type} callback
+	 * @returns {undefined}
+	 */
+	save : function(param , callback ){
+		var conn = require("../libs/mysql");
+		if(param == null || param == ""){
+			return;
+		}
+		var  sql = "INSERT INTO $column.comments ";
+		var params = [];
+		sql += "\n (";
+		#foreach ($column in $columns)
+			sql += "\n $column.columnName , ";//$column.comments
+		#end
+		sql += "\n  ) VALUES (";
+		#foreach ($column in $columns)
+			sql += "\n param.$column.columnName , ";//$column.comments
+		#end
+		console.log("sql="+sql);
+		conn.query( sql,params, function (err, result) {
+			if (err) {
+				console.error(err);
+				return callback({type: "sys", err: err});
+			}
+			return callback(null,result);
+		});
+	}
+
+};
+module.exports = ${classname}Dao;
+
